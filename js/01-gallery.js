@@ -27,17 +27,32 @@ galleryEl.addEventListener("click", (event) => {
 	return showImgModal(imgUrl);
 })
 
+
 const showImgModal = (imgUrl) => {
-	const instance = basicLightbox.create(`<img src="${imgUrl}" width="1280" height="853">`);
+		const instance = basicLightbox.create(`<img src="${imgUrl}" width="1280" height="853">`, {
+		
+		onShow: (instance) => {
+			console.log('onShow', instance);
+
+			document.addEventListener("keyup", checkEsc);
+		},
+		onClose: (instance) => {
+			console.log('onClose', instance);
+
+			document.removeEventListener("keyup", checkEsc);
+		}
+	})
 
 	instance.show();
 
-	document.addEventListener("keyup", (keyCode) => imgClose(keyCode), {once:true});
-	
-	const imgClose = (keyCode) => {
-		if ("Escape" === keyCode.code) {
+	function checkEsc({ code }) {
+		console.log(code);
+		if (code === "Escape") {
 			instance.close();
 		}
 	}
 } 
 
+
+
+	
